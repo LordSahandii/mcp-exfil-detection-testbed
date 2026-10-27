@@ -1,5 +1,9 @@
 # Understanding the logs
 
+> New to the project? Read [`WALKTHROUGH.md`](WALKTHROUGH.md) first — it explains
+> the end-to-end process and the live-run reports. This file is the terse,
+> field-by-field reference.
+
 Everything the testbed records lands under `logs/`. There are three kinds of
 artifact, kept deliberately separate (raw capture → derived features → results),
 plus the out-of-band prompt capture.
