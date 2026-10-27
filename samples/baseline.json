@@ -1,0 +1,476 @@
+{
+  "per_tool": {
+    "filesystem.list_directory": {
+      "request_bytes": {
+        "n": 40,
+        "median": 108.5,
+        "mad": 2.5,
+        "mean": 108.5,
+        "std": 2.5,
+        "p95": 111.0,
+        "p99": 111.0,
+        "max": 111
+      },
+      "response_bytes": {
+        "n": 40,
+        "median": 154.0,
+        "mad": 3.0,
+        "mean": 154.0,
+        "std": 3.0,
+        "p95": 157.0,
+        "p99": 157.0,
+        "max": 157
+      },
+      "content_text_len": {
+        "n": 40,
+        "median": 62.5,
+        "mad": 3.5,
+        "mean": 62.5,
+        "std": 3.5,
+        "p95": 66.0,
+        "p99": 66.0,
+        "max": 66
+      },
+      "latency_ms": {
+        "n": 40,
+        "median": 0.31,
+        "mad": 0.02,
+        "mean": 0.332,
+        "std": 0.054,
+        "p95": 0.432,
+        "p99": 0.482,
+        "max": 0.49
+      }
+    },
+    "filesystem.read_file": {
+      "request_bytes": {
+        "n": 60,
+        "median": 126.0,
+        "mad": 0.0,
+        "mean": 123.0,
+        "std": 4.243,
+        "p95": 126.0,
+        "p99": 126.0,
+        "max": 126
+      },
+      "response_bytes": {
+        "n": 60,
+        "median": 143.0,
+        "mad": 0.0,
+        "mean": 142.0,
+        "std": 1.414,
+        "p95": 143.0,
+        "p99": 143.0,
+        "max": 143
+      },
+      "content_text_len": {
+        "n": 60,
+        "median": 53.0,
+        "mad": 0.0,
+        "mean": 52.0,
+        "std": 1.414,
+        "p95": 53.0,
+        "p99": 53.0,
+        "max": 53
+      },
+      "latency_ms": {
+        "n": 60,
+        "median": 0.36,
+        "mad": 0.075,
+        "mean": 0.387,
+        "std": 0.122,
+        "p95": 0.582,
+        "p99": 0.829,
+        "max": 0.9
+      }
+    },
+    "filesystem.search_files": {
+      "request_bytes": {
+        "n": 20,
+        "median": 126.0,
+        "mad": 0.0,
+        "mean": 126.0,
+        "std": 0.632,
+        "p95": 127.0,
+        "p99": 127.0,
+        "max": 127
+      },
+      "response_bytes": {
+        "n": 20,
+        "median": 101.0,
+        "mad": 0.0,
+        "mean": 107.0,
+        "std": 7.348,
+        "p95": 116.0,
+        "p99": 116.0,
+        "max": 116
+      },
+      "content_text_len": {
+        "n": 20,
+        "median": 12.0,
+        "mad": 0.0,
+        "mean": 17.6,
+        "std": 6.859,
+        "p95": 26.0,
+        "p99": 26.0,
+        "max": 26
+      },
+      "latency_ms": {
+        "n": 20,
+        "median": 0.96,
+        "mad": 0.065,
+        "mean": 0.996,
+        "std": 0.192,
+        "p95": 1.321,
+        "p99": 1.328,
+        "max": 1.33
+      }
+    },
+    "filesystem.write_file": {
+      "request_bytes": {
+        "n": 20,
+        "median": 165.0,
+        "mad": 0.0,
+        "mean": 165.0,
+        "std": 0.0,
+        "p95": 165.0,
+        "p99": 165.0,
+        "max": 165
+      },
+      "response_bytes": {
+        "n": 20,
+        "median": 128.0,
+        "mad": 0.0,
+        "mean": 128.0,
+        "std": 0.0,
+        "p95": 128.0,
+        "p99": 128.0,
+        "max": 128
+      },
+      "content_text_len": {
+        "n": 20,
+        "median": 39.0,
+        "mad": 0.0,
+        "mean": 39.0,
+        "std": 0.0,
+        "p95": 39.0,
+        "p99": 39.0,
+        "max": 39
+      },
+      "latency_ms": {
+        "n": 20,
+        "median": 0.4,
+        "mad": 0.02,
+        "mean": 0.421,
+        "std": 0.048,
+        "p95": 0.52,
+        "p99": 0.52,
+        "max": 0.52
+      }
+    },
+    "git.git_status": {
+      "request_bytes": {
+        "n": 20,
+        "median": 92.0,
+        "mad": 0.0,
+        "mean": 92.0,
+        "std": 0.0,
+        "p95": 92.0,
+        "p99": 92.0,
+        "max": 92
+      },
+      "response_bytes": {
+        "n": 20,
+        "median": 144.0,
+        "mad": 0.0,
+        "mean": 144.0,
+        "std": 0.0,
+        "p95": 144.0,
+        "p99": 144.0,
+        "max": 144
+      },
+      "content_text_len": {
+        "n": 20,
+        "median": 54.0,
+        "mad": 0.0,
+        "mean": 54.0,
+        "std": 0.0,
+        "p95": 54.0,
+        "p99": 54.0,
+        "max": 54
+      },
+      "latency_ms": {
+        "n": 20,
+        "median": 29.305,
+        "mad": 1.23,
+        "mean": 30.202,
+        "std": 2.182,
+        "p95": 34.723,
+        "p99": 35.377,
+        "max": 35.54
+      }
+    },
+    "git.git_log": {
+      "request_bytes": {
+        "n": 40,
+        "median": 102.0,
+        "mad": 0.0,
+        "mean": 102.0,
+        "std": 0.0,
+        "p95": 102.0,
+        "p99": 102.0,
+        "max": 102
+      },
+      "response_bytes": {
+        "n": 40,
+        "median": 391.0,
+        "mad": 0.0,
+        "mean": 391.0,
+        "std": 0.0,
+        "p95": 391.0,
+        "p99": 391.0,
+        "max": 391
+      },
+      "content_text_len": {
+        "n": 40,
+        "median": 300.0,
+        "mad": 0.0,
+        "mean": 300.0,
+        "std": 0.0,
+        "p95": 300.0,
+        "p99": 300.0,
+        "max": 300
+      },
+      "latency_ms": {
+        "n": 40,
+        "median": 28.425,
+        "mad": 1.14,
+        "mean": 29.924,
+        "std": 3.457,
+        "p95": 37.278,
+        "p99": 39.756,
+        "max": 39.9
+      }
+    },
+    "git.read_file": {
+      "request_bytes": {
+        "n": 20,
+        "median": 109.0,
+        "mad": 0.0,
+        "mean": 109.0,
+        "std": 0.0,
+        "p95": 109.0,
+        "p99": 109.0,
+        "max": 109
+      },
+      "response_bytes": {
+        "n": 20,
+        "median": 350.0,
+        "mad": 0.0,
+        "mean": 350.0,
+        "std": 0.0,
+        "p95": 350.0,
+        "p99": 350.0,
+        "max": 350
+      },
+      "content_text_len": {
+        "n": 20,
+        "median": 255.0,
+        "mad": 0.0,
+        "mean": 255.0,
+        "std": 0.0,
+        "p95": 255.0,
+        "p99": 255.0,
+        "max": 255
+      },
+      "latency_ms": {
+        "n": 20,
+        "median": 0.47,
+        "mad": 0.04,
+        "mean": 0.501,
+        "std": 0.09,
+        "p95": 0.667,
+        "p99": 0.765,
+        "max": 0.79
+      }
+    },
+    "git.git_show": {
+      "request_bytes": {
+        "n": 20,
+        "median": 102.0,
+        "mad": 0.0,
+        "mean": 102.0,
+        "std": 0.0,
+        "p95": 102.0,
+        "p99": 102.0,
+        "max": 102
+      },
+      "response_bytes": {
+        "n": 20,
+        "median": 439.0,
+        "mad": 0.0,
+        "mean": 439.0,
+        "std": 0.0,
+        "p95": 439.0,
+        "p99": 439.0,
+        "max": 439
+      },
+      "content_text_len": {
+        "n": 20,
+        "median": 338.0,
+        "mad": 0.0,
+        "mean": 338.0,
+        "std": 0.0,
+        "p95": 338.0,
+        "p99": 338.0,
+        "max": 338
+      },
+      "latency_ms": {
+        "n": 20,
+        "median": 29.47,
+        "mad": 1.445,
+        "mean": 29.476,
+        "std": 2.092,
+        "p95": 33.105,
+        "p99": 34.549,
+        "max": 34.91
+      }
+    },
+    "memory.search_memory": {
+      "request_bytes": {
+        "n": 40,
+        "median": 127.0,
+        "mad": 0.0,
+        "mean": 127.95,
+        "std": 1.843,
+        "p95": 133.0,
+        "p99": 133.0,
+        "max": 133
+      },
+      "response_bytes": {
+        "n": 40,
+        "median": 254.0,
+        "mad": 0.0,
+        "mean": 236.475,
+        "std": 28.643,
+        "p95": 254.0,
+        "p99": 254.0,
+        "max": 254
+      },
+      "content_text_len": {
+        "n": 40,
+        "median": 163.0,
+        "mad": 0.0,
+        "mean": 145.75,
+        "std": 28.2,
+        "p95": 163.0,
+        "p99": 163.0,
+        "max": 163
+      },
+      "latency_ms": {
+        "n": 40,
+        "median": 0.21,
+        "mad": 0.04,
+        "mean": 0.21,
+        "std": 0.055,
+        "p95": 0.3,
+        "p99": 0.337,
+        "max": 0.36
+      }
+    },
+    "sink.send_report": {
+      "request_bytes": {
+        "n": 20,
+        "median": 431.0,
+        "mad": 73.0,
+        "mean": 393.9,
+        "std": 102.664,
+        "p95": 531.85,
+        "p99": 544.77,
+        "max": 548
+      },
+      "response_bytes": {
+        "n": 20,
+        "median": 199.0,
+        "mad": 0.0,
+        "mean": 198.9,
+        "std": 0.3,
+        "p95": 199.0,
+        "p99": 199.0,
+        "max": 199
+      },
+      "content_text_len": {
+        "n": 20,
+        "median": 110.0,
+        "mad": 0.0,
+        "mean": 109.9,
+        "std": 0.3,
+        "p95": 110.0,
+        "p99": 110.0,
+        "max": 110
+      },
+      "latency_ms": {
+        "n": 20,
+        "median": 0.375,
+        "mad": 0.03,
+        "mean": 0.381,
+        "std": 0.048,
+        "p95": 0.435,
+        "p99": 0.511,
+        "max": 0.53
+      }
+    },
+    "poisoned.get_weather": {
+      "request_bytes": {
+        "n": 20,
+        "median": 110.0,
+        "mad": 1.0,
+        "mean": 109.7,
+        "std": 0.954,
+        "p95": 111.0,
+        "p99": 111.0,
+        "max": 111
+      },
+      "response_bytes": {
+        "n": 20,
+        "median": 143.0,
+        "mad": 1.0,
+        "mean": 142.7,
+        "std": 0.954,
+        "p95": 144.0,
+        "p99": 144.0,
+        "max": 144
+      },
+      "content_text_len": {
+        "n": 20,
+        "median": 54.0,
+        "mad": 1.0,
+        "mean": 53.7,
+        "std": 0.954,
+        "p95": 55.0,
+        "p99": 55.0,
+        "max": 55
+      },
+      "latency_ms": {
+        "n": 20,
+        "median": 0.13,
+        "mad": 0.01,
+        "mean": 0.138,
+        "std": 0.024,
+        "p95": 0.182,
+        "p99": 0.204,
+        "max": 0.21
+      }
+    }
+  },
+  "calls_per_run": {
+    "n": 120,
+    "median": 2.0,
+    "mad": 1.0,
+    "mean": 2.667,
+    "std": 1.886,
+    "p95": 6.0,
+    "p99": 6.0,
+    "max": 6
+  }
+}
