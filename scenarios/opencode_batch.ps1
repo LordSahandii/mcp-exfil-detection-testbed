@@ -10,9 +10,12 @@
   root (this repo already has both). Run from the project root:
 
     powershell -ExecutionPolicy Bypass -File scenarios/opencode_batch.ps1
-    powershell -ExecutionPolicy Bypass -File scenarios/opencode_batch.ps1 -Repeats 3
+    powershell -ExecutionPolicy Bypass -File scenarios/opencode_batch.ps1 -Repeats 3 -Fresh
+
+  -Fresh clears prior OpenCode-captured data (logs/raw/*.opencode.jsonl,
+  logs/prompts.jsonl, logs/opencode_events.jsonl) before running.
 #>
-param([int]$Repeats = 1)
+param([int]$Repeats = 1, [switch]$Fresh)
 
 $ErrorActionPreference = "Continue"
 Set-Location (Split-Path $PSScriptRoot -Parent)
@@ -30,6 +33,13 @@ $tasks = @(
 
 $promptsFile = "logs/prompts.jsonl"
 New-Item -ItemType Directory -Force -Path "logs" | Out-Null
+
+if ($Fresh) {
+  Write-Host "Clearing prior OpenCode-captured data..." -ForegroundColor Yellow
+  Remove-Item -ErrorAction SilentlyContinue "logs/raw/*.opencode.jsonl"
+  Remove-Item -ErrorAction SilentlyContinue $promptsFile
+  Remove-Item -ErrorAction SilentlyContinue "logs/opencode_events.jsonl"
+}
 
 for ($r = 1; $r -le $Repeats; $r++) {
   $i = 0
