@@ -15,11 +15,13 @@
 
     powershell -ExecutionPolicy Bypass -File scenarios/opencode_batch.ps1
     powershell -ExecutionPolicy Bypass -File scenarios/opencode_batch.ps1 -Repeats 3 -Fresh
+    powershell -ExecutionPolicy Bypass -File scenarios/opencode_batch.ps1 -Model qwen2.5:7b
 
-  -Fresh clears prior OpenCode-captured data (logs/raw/*.opencode.jsonl,
-  logs/prompts.jsonl, logs/opencode_events.jsonl) before running.
+  -Fresh clears prior OpenCode-captured data before running.
+  -Model picks the Ollama model (default qwen2.5:14b; 7b is faster but flakier
+          at tool calling). The model must be in opencode.json's provider list.
 #>
-param([int]$Repeats = 1, [switch]$Fresh)
+param([int]$Repeats = 1, [switch]$Fresh, [string]$Model = "qwen2.5:14b")
 
 $ErrorActionPreference = "Continue"
 Set-Location (Split-Path $PSScriptRoot -Parent)
@@ -93,8 +95,8 @@ for ($r = 1; $r -le $Repeats; $r++) {
       approved_destinations = $approved
     } | ConvertTo-Json -Compress) | Add-Content -Path $policyFile -Encoding utf8
 
-    Write-Host "[$r/$Repeats task $i/$($tasks.Count)] ($runId) $prompt" -ForegroundColor Cyan
-    opencode run $prompt | Out-Null
+    Write-Host "[$r/$Repeats task $i/$($tasks.Count)] ($runId) [$Model] $prompt" -ForegroundColor Cyan
+    opencode run -m "ollama/$Model" $prompt | Out-Null
   }
 }
 Remove-Item Env:MCP_RUN_ID -ErrorAction SilentlyContinue

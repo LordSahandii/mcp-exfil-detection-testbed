@@ -28,6 +28,7 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import threading
@@ -90,8 +91,14 @@ class Proxy:
         self._req_ctx: dict = {}
         self._ctx_lock = threading.Lock()
 
+        # Resolve the upstream executable (on Windows, `npx`/`uvx` are `.cmd`
+        # shims that Popen won't find by bare name).
+        cmd = list(args.server_cmd)
+        resolved = shutil.which(cmd[0])
+        if resolved:
+            cmd[0] = resolved
         self.upstream = subprocess.Popen(
-            args.server_cmd,
+            cmd,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

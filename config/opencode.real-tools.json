@@ -1,0 +1,80 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "//": "REAL-TOOLS config: wires the OFFICIAL MCP reference servers (filesystem, git, memory) through the logging proxy, plus the custom local sink, plus an optional GitHub server. To use it: Copy-Item config/opencode.real-tools.json opencode.json -Force (back up your lab config first). Switch back with the lab config in config/opencode.lab.json. First npx/uvx run downloads the servers.",
+  "model": "ollama/qwen2.5:14b",
+  "tools": {
+    "bash": false, "read": false, "write": false, "edit": false,
+    "glob": false, "grep": false, "list": false, "patch": false,
+    "webfetch": false, "todowrite": false, "todoread": false, "task": false
+  },
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": { "qwen2.5:7b": { "name": "Qwen2.5 7B" }, "qwen2.5:14b": { "name": "Qwen2.5 14B" } }
+    }
+  },
+  "mcp": {
+    "filesystem-official": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "python", "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "filesystem_official", "--label", "opencode",
+        "--",
+        "npx", "-y", "@modelcontextprotocol/server-filesystem",
+        "F:/project0/MCP-Project/lab"
+      ]
+    },
+    "git-official": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "python", "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "git_official", "--label", "opencode",
+        "--",
+        "uvx", "mcp-server-git", "--repository", "F:/project0/MCP-Project/lab/repo_clean"
+      ]
+    },
+    "memory-official": {
+      "type": "local",
+      "enabled": true,
+      "environment": { "MEMORY_FILE_PATH": "F:/project0/MCP-Project/lab/memory.json" },
+      "command": [
+        "python", "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "memory_official", "--label", "opencode",
+        "--",
+        "npx", "-y", "@modelcontextprotocol/server-memory"
+      ]
+    },
+    "sink-lab": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "python", "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "sink", "--label", "opencode",
+        "--",
+        "python", "F:/project0/MCP-Project/servers/sink_server.py",
+        "--receipts", "F:/project0/MCP-Project/logs/features/sink_receipts.jsonl"
+      ]
+    },
+    "github": {
+      "type": "local",
+      "enabled": false,
+      "//": "To enable: put a SCOPED personal access token for a TEST account/repo in GITHUB_PERSONAL_ACCESS_TOKEN below, then set enabled:true. The agent can act on that repo, so use a throwaway/test repo per your ethics plan. Production alternative: github/github-mcp-server (Go/Docker).",
+      "environment": { "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_REPLACE_WITH_TEST_SCOPED_TOKEN" },
+      "command": [
+        "python", "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "github", "--label", "opencode",
+        "--",
+        "npx", "-y", "@modelcontextprotocol/server-github"
+      ]
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "ollama/qwen2.5:14b",
+  "tools": {
+    "bash": false, "read": false, "write": false, "edit": false,
+    "glob": false, "grep": false, "list": false, "patch": false,
+    "webfetch": false, "todowrite": false, "todoread": false, "task": false
+  },
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": {
+        "qwen2.5:7b": { "name": "Qwen2.5 7B" },
+        "qwen2.5:14b": { "name": "Qwen2.5 14B" }
+      }
+    }
+  },
+  "mcp": {
+    "filesystem-lab": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "python", "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "filesystem", "--label", "opencode",
+        "--",
+        "python", "F:/project0/MCP-Project/servers/fs_server.py",
+        "--root", "F:/project0/MCP-Project/lab"
+      ]
+    },
+    "git-lab": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "python", "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "git", "--label", "opencode",
+        "--",
+        "python", "F:/project0/MCP-Project/servers/git_server.py",
+        "--repo", "F:/project0/MCP-Project/lab/repo_clean"
+      ]
+    },
+    "memory-lab": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "python", "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "memory", "--label", "opencode",
+        "--",
+        "python", "F:/project0/MCP-Project/servers/memory_server.py"
+      ]
+    },
+    "sink-lab": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "python", "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "sink", "--label", "opencode",
+        "--",
+        "python", "F:/project0/MCP-Project/servers/sink_server.py",
+        "--receipts", "F:/project0/MCP-Project/logs/features/sink_receipts.jsonl"
+      ]
+    }
+  }
+}
