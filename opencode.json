@@ -39,7 +39,7 @@
         "--server-id", "git", "--label", "opencode",
         "--",
         "python", "F:/project0/MCP-Project/servers/git_server.py",
-        "--repo", "F:/project0/MCP-Project/lab/repo"
+        "--repo", "F:/project0/MCP-Project/lab/repo_clean"
       ]
     },
     "memory-lab": {

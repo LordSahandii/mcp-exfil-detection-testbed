@@ -12,7 +12,9 @@ import { join } from "node:path";
 
 export const PromptLogger = async ({ directory }) => {
   const base = directory || "F:/project0/MCP-Project";
-  const logDir = join(base, "logs");
+  // Centralize logs with MCP_LOG_DIR (useful when the plugin is installed
+  // globally and used across projects); otherwise write to <project>/logs.
+  const logDir = process.env.MCP_LOG_DIR || join(base, "logs");
   try { mkdirSync(logDir, { recursive: true }); } catch (_) {}
   const promptsFile = join(logDir, "prompts.jsonl");
   const eventsFile = join(logDir, "opencode_events.jsonl");
