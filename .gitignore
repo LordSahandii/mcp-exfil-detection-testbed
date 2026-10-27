@@ -10,6 +10,9 @@ logs/
 .opencode/*
 !.opencode/plugins/
 
+# Transient config backup created while swapping configs (opencode_demo.ps1).
+opencode.json.bak
+
 # Python
 __pycache__/
 *.py[cod]

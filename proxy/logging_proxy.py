@@ -77,7 +77,9 @@ class Recorder:
 class Proxy:
     def __init__(self, args):
         self.server_id = args.server_id
-        self.label = args.label
+        # MCP_LABEL lets one client config tag runs dynamically (benign vs attack)
+        # without editing the config; falls back to the --label argument.
+        self.label = os.environ.get("MCP_LABEL") or args.label
         self.run_id = args.run_id or uuid.uuid4().hex[:12]
         self.connection_id = uuid.uuid4().hex[:12]
         self.scenario_id = args.scenario_id
