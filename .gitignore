@@ -1,0 +1,22 @@
+# Generated lab fixtures (regenerate with scenarios/build_lab.py).
+# NOTE: lab/repo/ contains a nested git repo, so this must stay ignored.
+lab/
+
+# Generated telemetry, datasets, and reports (regenerate with run_all.ps1).
+# A curated snapshot is kept under samples/ instead.
+logs/raw/
+logs/features/
+logs/reports/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

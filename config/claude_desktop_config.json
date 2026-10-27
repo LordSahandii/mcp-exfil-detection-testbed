@@ -1,0 +1,48 @@
+{
+  "//": "Claude Desktop MCP config. Copy the mcpServers block into %APPDATA%/Claude/claude_desktop_config.json. Each server is launched through logging_proxy.py so traffic is captured to logs/raw/<server>.claude.jsonl. Restart Claude Desktop after editing.",
+  "mcpServers": {
+    "filesystem-lab": {
+      "command": "python",
+      "args": [
+        "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "filesystem", "--label", "claude",
+        "--",
+        "python", "F:/project0/MCP-Project/servers/fs_server.py",
+        "--root", "F:/project0/MCP-Project/lab"
+      ]
+    },
+    "git-lab": {
+      "command": "python",
+      "args": [
+        "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "git", "--label", "claude",
+        "--",
+        "python", "F:/project0/MCP-Project/servers/git_server.py",
+        "--repo", "F:/project0/MCP-Project/lab/repo"
+      ]
+    },
+    "memory-lab": {
+      "command": "python",
+      "args": [
+        "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "memory", "--label", "claude",
+        "--",
+        "python", "F:/project0/MCP-Project/servers/memory_server.py"
+      ]
+    },
+    "sink-lab": {
+      "command": "python",
+      "args": [
+        "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir", "F:/project0/MCP-Project/logs/raw",
+        "--server-id", "sink", "--label", "claude",
+        "--",
+        "python", "F:/project0/MCP-Project/servers/sink_server.py",
+        "--receipts", "F:/project0/MCP-Project/logs/features/sink_receipts.jsonl"
+      ]
+    }
+  }
+}

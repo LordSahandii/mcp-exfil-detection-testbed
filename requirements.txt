@@ -1,0 +1,11 @@
+# The core testbed (proxy, lab servers, scenario drivers, analysis) uses only the
+# Python standard library -- there is nothing to install to run run_all.ps1.
+#
+# Optional, only if you want to drive traffic with a live LLM / official servers:
+#   - OpenCode (client)         : https://opencode.ai  (install separately)
+#   - Ollama + a small Qwen model: https://ollama.com
+#   - Official MCP servers are launched via `npx`/`uvx` (Node / uv), not pip.
+#
+# Optional Python extras (not required by this repo):
+# mcp==1.16.0        # official MCP Python SDK, if you prefer it over mcplite
+# fastmcp==2.14.7    # FastMCP, if you build additional servers with it
