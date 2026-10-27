@@ -1,6 +1,6 @@
 # MCP Traffic Baselining & Exfiltration Detection — Testbed
 
-CMPT 782 — Cybersecurity Lab 1 (Fall 2026). A reproducible, **local, synthetic**
+A reproducible, **local, synthetic**
 testbed that routes MCP traffic through an instrumented proxy, builds a benign
 baseline, generates labelled E1–E6 attack traffic, and evaluates an interpretable
 detector — including a tunable exfiltration sweep that measures channel capacity.
