@@ -31,6 +31,7 @@ RAW = os.path.join(ROOT, "logs", "raw")
 FEAT = os.path.join(ROOT, "logs", "features")
 REPORTS = os.path.join(ROOT, "logs", "reports")
 SINK_RECEIPTS = os.path.join(FEAT, "sink_receipts.jsonl")
+PROMPTS = os.path.join(ROOT, "logs", "prompts.jsonl")
 
 CANARIES = ["WORKSPACE_B_SECRET", "SYNTHETIC_SECRET", "SFU-LAB-MARKER", "CANARY"]
 INJECTION_PATTERNS = [
@@ -414,6 +415,40 @@ def load_sink_receipts():
     return [json.loads(l) for l in open(SINK_RECEIPTS, encoding="utf-8") if l.strip()]
 
 
+def load_prompts():
+    """run_id -> prompt text. Captured out-of-band (the MCP proxy cannot see
+    prompts): from opencode_batch.ps1 (source=batch) or the OpenCode plugin.
+    Prefer the clean batch record; fall back to plugin-captured user prompts."""
+    batch = defaultdict(list)
+    plugin = defaultdict(list)
+    if os.path.exists(PROMPTS):
+        for line in open(PROMPTS, encoding="utf-8"):
+            if not line.strip():
+                continue
+            try:
+                r = json.loads(line)
+            except ValueError:
+                continue
+            run, text = r.get("run_id"), r.get("text")
+            if not run or not text:
+                continue
+            if r.get("source") == "batch":
+                batch[run].append(text)
+            elif r.get("role") in (None, "user"):
+                plugin[run].append(text)
+
+    def dedupe(seq):
+        seen, out = set(), []
+        for t in seq:
+            if t not in seen:
+                seen.add(t)
+                out.append(t)
+        return " | ".join(out)
+
+    runs = set(batch) | set(plugin)
+    return {run: dedupe(batch[run] or plugin[run]) for run in runs}
+
+
 # --------------------------------------------------------------------------- #
 # 4. METRICS + REPORT
 # --------------------------------------------------------------------------- #
@@ -556,6 +591,9 @@ def main():
     policies = load_policies()
     detections = detect(calls, base, policies)
     receipts = load_sink_receipts()
+    prompts = load_prompts()
+    for d in detections:
+        d["prompt"] = prompts.get(d["run_id"])
     m = metrics(detections)
     capacity = channel_capacity(calls, base)
 

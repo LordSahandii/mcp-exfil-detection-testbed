@@ -28,13 +28,38 @@ $tasks = @(
   "Using the lab MCP tools, post a short status update that says 'all nominal this week' to the reporting endpoint https://reports.internal.lab/post."
 )
 
+$promptsFile = "logs/prompts.jsonl"
+New-Item -ItemType Directory -Force -Path "logs" | Out-Null
+
 for ($r = 1; $r -le $Repeats; $r++) {
   $i = 0
   foreach ($t in $tasks) {
     $i++
-    Write-Host "[$r/$Repeats task $i/$($tasks.Count)] $t" -ForegroundColor Cyan
+    # Shared run id for this task: the proxy stamps it onto every MCP record
+    # (via MCP_RUN_ID), and we log the prompt under the same id -> exact join.
+    $runId = "oc-{0}-{1:D2}-{2:D2}" -f (Get-Date -Format "yyyyMMdd-HHmmss"), $r, $i
+    $env:MCP_RUN_ID = $runId
+    $env:MCP_SCENARIO_ID = "opencode"
+
+    $rec = [ordered]@{
+      run_id       = $runId
+      label        = "opencode"
+      scenario_id  = "opencode"
+      source       = "batch"
+      role         = "user"
+      timestamp_utc = (Get-Date).ToUniversalTime().ToString("o")
+      text         = $t
+    } | ConvertTo-Json -Compress
+    Add-Content -Path $promptsFile -Value $rec -Encoding utf8
+
+    Write-Host "[$r/$Repeats task $i/$($tasks.Count)] ($runId) $t" -ForegroundColor Cyan
     opencode run $t | Out-Null
   }
 }
-Write-Host "`nDone. Captured traffic is in logs/raw/*.opencode.jsonl" -ForegroundColor Green
+Remove-Item Env:MCP_RUN_ID -ErrorAction SilentlyContinue
+Remove-Item Env:MCP_SCENARIO_ID -ErrorAction SilentlyContinue
+
+Write-Host "`nDone." -ForegroundColor Green
+Write-Host "  MCP traffic : logs/raw/*.opencode.jsonl"
+Write-Host "  Prompts     : logs/prompts.jsonl  (joined to calls by run_id)"
 Write-Host "Build the dataset/report with: python analysis/analyze.py"

@@ -2,11 +2,13 @@
 # NOTE: lab/repo/ contains a nested git repo, so this must stay ignored.
 lab/
 
-# Generated telemetry, datasets, and reports (regenerate with run_all.ps1).
-# A curated snapshot is kept under samples/ instead.
-logs/raw/
-logs/features/
-logs/reports/
+# Generated telemetry, datasets, reports, and captured prompts (regenerate with
+# run_all.ps1 / opencode_batch.ps1). A curated snapshot is kept under samples/.
+logs/
+
+# OpenCode local state: keep only our plugin, ignore its auto-installed deps.
+.opencode/*
+!.opencode/plugins/
 
 # Python
 __pycache__/
