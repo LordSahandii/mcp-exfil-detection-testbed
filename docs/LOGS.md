@@ -16,6 +16,7 @@ logs/
   opencode_events.jsonl  <- raw OpenCode message/tool events (plugin, for audit)
   features/
     calls.csv / calls.jsonl   <- 1 row per tool call + derived signals (the dataset)
+    benign.json / malicious.json <- calls split by label + prompt/request/response
     run_policy.jsonl          <- the authorized task policy per run (ground truth)
     sink_receipts.jsonl       <- what actually reached the sink (exfil ground truth)
   reports/
@@ -122,6 +123,10 @@ reasoning turns and assistant text); `prompts.jsonl` is the cleaned version.
   `sig_egress`, `sig_traversal_attempt`, `sig_boundary_denied`,
   `sig_tools_changed_in_session`, `sig_mutate_after_read`, `sig_cross_workspace`)
   and `prev_tool`. This is what you'd train/evaluate a detector on.
+- **`benign.json` / `malicious.json`** — `calls.jsonl` split by ground-truth
+  `label` and enriched (by `analysis/split_dataset.py`) with `user_prompt` (from
+  `prompts.jsonl`), `mcp_request` (tool args) and `mcp_response` (bounded response
+  content). The train/eval-ready pair; regenerate with `python analysis/split_dataset.py`.
 - **`run_policy.jsonl`** — the authorized task policy per run: `task_intent`
   (`read_only`/`read_write`), `allow_egress`, `allowed_write_roots`,
   `scope_workspace`, `approved_destinations`. This is **ground truth for intent**,

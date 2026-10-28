@@ -144,6 +144,8 @@ logs/
   opencode_events.jsonl        <- raw OpenCode event stream (audit)
   features/
     calls.csv / calls.jsonl    <- the dataset: 1 row per tool call + signals
+    benign.json / malicious.json  <- calls split by label, enriched with
+                                     prompt + request + response (derived)
     run_policy.jsonl           <- authorized task policy per run (ground truth)
     sink_receipts.jsonl        <- what actually reached the sink (exfil truth)
   reports/
@@ -225,6 +227,21 @@ plus the derived boolean **signals** the detector reasons over:
 `prev_tool` records the previous tool in the run, so the detector can reason
 about *sequences*. `.csv` and `.jsonl` carry the same rows — CSV for Excel,
 JSONL for scripts.
+
+**Split + enriched sets.** `analysis/split_dataset.py` reads `calls.jsonl` and
+writes two JSON arrays — `benign.json` and `malicious.json` — bucketed by
+ground-truth `label` (`benign`/`opencode-benign`/`opencode` vs
+`attack`/`opencode-attack`/`sweep`). Each record keeps all the signals above and
+adds three fields joined back from the other logs:
+- **`user_prompt`** — the task text, from `prompts.jsonl` by `run_id` (`null` for
+  the deterministic drivers, which have no natural-language prompt — their intent
+  is in `run_policy.jsonl`).
+- **`mcp_request`** — the tool-call arguments, as a JSON string.
+- **`mcp_response`** — the response content as `[{"type":"text","text":...}]`,
+  bounded to the proxy's 800-char preview (`mcp_response_truncated` flags longer).
+
+These are the train/eval-ready files; regenerate them after any run with
+`python analysis/split_dataset.py`.
 
 ### 4.5 `features/run_policy.jsonl` — the authorized-intent ground truth
 
