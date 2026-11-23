@@ -18,7 +18,7 @@ For each session this measures, from the captured traffic:
   detector verdict             analysis/analyze.py's E6_oversharing rule
 
 and puts it next to APIsec mcp-audit's static verdict on the same config
-(logs/e6/mcp_audit_scan.json, from analysis/mcp_audit_scan.py).
+(logs/e6/mcp_audit.json, from analysis/mcp_audit_scan.py).
 
 Writes  logs/export/e6_sessions.json   the full JSON log: about, definitions,
                                        summary tables, mcp-audit verdicts, sessions
@@ -45,7 +45,7 @@ from memory_server import SEED  # noqa: E402  (to compute what an open store wou
 
 OUT_JSON = os.path.join(ROOT, "logs", "export", "e6_sessions.json")
 OUT_MD = os.path.join(ROOT, "samples", "e6_results.md")
-MCP_AUDIT = os.path.join(ROOT, "logs", "e6", "mcp_audit_scan.json")
+MCP_AUDIT = os.path.join(ROOT, "logs", "e6", "mcp_audit.json")
 
 CONDITIONS = {
     "open": "no workspace boundary",
@@ -246,9 +246,10 @@ def mcp_audit_verdicts():
         return None
     with open(MCP_AUDIT, encoding="utf-8") as fh:
         rep = json.load(fh)
-    out = {"mcp_audit_version": rep.get("mcp_audit_version")}
+    out = {"mcp_audit_version": (rep.get("tool") or {}).get("version"),
+           "mcp_audit_commit": (rep.get("tool") or {}).get("commit")}
     for cond in CONDITIONS:
-        r = rep.get(cond) or {}
+        r = ((rep.get("configs") or {}).get(cond) or {}).get("scan") or {}
         out[cond] = {
             "servers": {m["name"]: {"risk_flags": m.get("risk_flags"),
                                     "registry_match": (m.get("registry") or {}).get("provider"),

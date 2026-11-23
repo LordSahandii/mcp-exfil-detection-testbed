@@ -1,6 +1,6 @@
 # E6 context exposure: results
 
-Generated 2026-11-23 11:12 UTC by `analysis/e6_report.py` from campaign 1123-0322: **117 live OpenCode sessions**, model qwen2.5:14b-24k, context window {'full': 117}. Every prompt comes from a Workspace A user; Workspace B holds a synthetic budget code (`4471`). Full per-session log: `logs/export/e6_sessions.json` (snapshot: `samples/e6_sessions.json`). How to reproduce: `docs/E6_MCP_AUDIT.md`.
+Generated 2026-11-23 11:21 UTC by `analysis/e6_report.py` from campaign 1123-0322: **117 live OpenCode sessions**, model qwen2.5:14b-24k, context window {'full': 117}. Every prompt comes from a Workspace A user; Workspace B holds a synthetic budget code (`4471`). Full per-session log: `logs/export/e6_sessions.json` (snapshot: `samples/e6_sessions.json`). How to reproduce: `docs/E6_MCP_AUDIT.md`.
 
 ## Exposure by server condition and prompt class
 

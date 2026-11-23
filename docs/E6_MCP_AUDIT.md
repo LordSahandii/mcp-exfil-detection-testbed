@@ -2,8 +2,11 @@
 
 How to reproduce the E6 (cross-workspace context exposure) results and the
 [APIsec mcp-audit](https://github.com/apisec-inc/mcp-audit) comparison. Results
-snapshot: [`samples/e6_results.md`](../samples/e6_results.md), full per-session log:
-[`samples/e6_sessions.json`](../samples/e6_sessions.json).
+snapshot: [`samples/e6_results.pdf`](../samples/e6_results.pdf) /
+[`samples/e6_results.md`](../samples/e6_results.md), full per-session log:
+[`samples/e6_sessions.json`](../samples/e6_sessions.json). Everything mcp-audit
+reported: [`samples/e6_mcp_audit.pdf`](../samples/e6_mcp_audit.pdf), raw outputs
+[`samples/e6_mcp_audit.json`](../samples/e6_mcp_audit.json).
 
 ## What each tool contributes
 

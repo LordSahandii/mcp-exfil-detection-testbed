@@ -1,0 +1,1359 @@
+{
+  "tool": {
+    "name": "mcp-audit",
+    "publisher": "APIsec",
+    "repo": "https://github.com/apisec-inc/mcp-audit",
+    "version": "1.1.0",
+    "commit": "6ae4e1ff58f3a75ca356fd173112770d217f59a3"
+  },
+  "what_it_is": "A static scanner: reads MCP configuration files (mcpServers JSON) and MCP server source code before deployment. It does not run servers or capture MCP traffic.",
+  "not_run": {
+    "scan --local": "also sweeps this machine's own Claude/Cursor/VS Code/Windsurf/Zed configs; the project scanner was run on the lab configs only",
+    "trust": "sends each server's source to the npm and GitHub APIs; the lab's sources are local script paths, which it would query npm for as package names",
+    "analyze": "aggregates configs collected from many machines (collectors/); not applicable"
+  },
+  "configs": {
+    "open": {
+      "scanned_file": "config/e6/open/mcp.json",
+      "memory_server_flags": [],
+      "scan": {
+        "scan_time": "2026-11-23T04:21:11.159974",
+        "total_mcps": 2,
+        "mcps": [
+          {
+            "name": "filesystem-lab",
+            "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+            "found_in": "Project (open)",
+            "server_type": "python",
+            "config_path": "F:\\project0\\MCP-Project\\config\\e6\\open\\mcp.json",
+            "command": "python",
+            "args": [
+              "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "--log-dir",
+              "F:/project0/MCP-Project/logs/raw",
+              "--server-id",
+              "filesystem",
+              "--label",
+              "opencode",
+              "--",
+              "python",
+              "F:/project0/MCP-Project/servers/fs_server.py",
+              "--root",
+              "F:/project0/MCP-Project/lab"
+            ],
+            "env": {},
+            "risk_flags": [
+              "filesystem-access"
+            ],
+            "registry": {
+              "is_known": true,
+              "provider": "Anthropic",
+              "type": "official",
+              "risk_level": "high",
+              "verified": true,
+              "capabilities": [
+                "file-read",
+                "file-write",
+                "directory-list"
+              ]
+            }
+          },
+          {
+            "name": "memory-lab",
+            "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+            "found_in": "Project (open)",
+            "server_type": "python",
+            "config_path": "F:\\project0\\MCP-Project\\config\\e6\\open\\mcp.json",
+            "command": "python",
+            "args": [
+              "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "--log-dir",
+              "F:/project0/MCP-Project/logs/raw",
+              "--server-id",
+              "memory",
+              "--label",
+              "opencode",
+              "--",
+              "python",
+              "F:/project0/MCP-Project/servers/memory_server.py"
+            ],
+            "env": {},
+            "risk_flags": [],
+            "registry": {
+              "is_known": true,
+              "provider": "Model Context Protocol",
+              "type": "official",
+              "risk_level": "low",
+              "verified": true,
+              "capabilities": [
+                "knowledge-store",
+                "knowledge-retrieve"
+              ]
+            }
+          }
+        ],
+        "findings": [
+          {
+            "flag": "filesystem-access",
+            "severity": "high",
+            "affected_mcps": [
+              "filesystem-lab"
+            ],
+            "explanation": "This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration.",
+            "remediation": "Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths.",
+            "owasp_llm": [
+              {
+                "id": "LLM06",
+                "name": "Excessive Agency"
+              }
+            ]
+          }
+        ],
+        "owasp_llm_coverage": {
+          "reference": "https://genai.owasp.org/llm-top-10/",
+          "items": [
+            {
+              "id": "LLM01",
+              "name": "Prompt Injection",
+              "covered": true,
+              "evidence": "2 MCP(s) discovered - attack surface mapped"
+            },
+            {
+              "id": "LLM06",
+              "name": "Excessive Agency",
+              "covered": true,
+              "evidence": "Agency risks: filesystem-access"
+            }
+          ]
+        }
+      },
+      "scan_markdown": "# MCP Audit Report\n\n**Scan Time:** 2026-11-23 04:21:11\n**Total MCPs Found:** 2\n\n## MCP Inventory\n\n| MCP Name | Source | Found In | Type | Risk Flags |\n|----------|--------|----------|------|------------|\n| filesystem-lab | F:/project0/MCP-Project/proxy/logging_proxy.py | Project (open) | python | filesystem-access |\n| memory-lab | F:/project0/MCP-Project/proxy/logging_proxy.py | Project (open) | python | - |\n\n## Findings & Remediation\n\n### [HIGH] filesystem-access\n\n**Affected MCPs:** filesystem-lab\n\n**Why:** This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration.\n\n**OWASP LLM:** LLM06 (Excessive Agency)\n\n**Fix:** Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths.\n",
+      "scan_csv": "name,source,found_in,server_type,risk_flags,secrets_count,secrets_severity,apis_count,api_categories,config_path\nfilesystem-lab,F:/project0/MCP-Project/proxy/logging_proxy.py,Project (open),python,filesystem-access,0,,0,,F:\\project0\\MCP-Project\\config\\e6\\open\\mcp.json\nmemory-lab,F:/project0/MCP-Project/proxy/logging_proxy.py,Project (open),python,,0,,0,,F:\\project0\\MCP-Project\\config\\e6\\open\\mcp.json",
+      "sarif": {
+        "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+        "version": "2.1.0",
+        "runs": [
+          {
+            "tool": {
+              "driver": {
+                "name": "mcp-audit",
+                "informationUri": "https://github.com/apisec-inc/mcp-audit",
+                "version": "1.0.0",
+                "organization": "APIsec",
+                "shortDescription": {
+                  "text": "Security audit for Model Context Protocol (MCP) configurations"
+                },
+                "fullDescription": {
+                  "text": "MCP Audit scans AI development tools (Claude Desktop, Cursor, VS Code) for security risks including exposed secrets, API endpoints, and excessive agency."
+                },
+                "rules": [
+                  {
+                    "id": "mcp-audit/filesystem-access",
+                    "name": "Filesystem Access",
+                    "shortDescription": {
+                      "text": "filesystem-access"
+                    },
+                    "fullDescription": {
+                      "text": "This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration."
+                    },
+                    "help": {
+                      "text": "Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths.",
+                      "markdown": "**Remediation:** Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths."
+                    },
+                    "defaultConfiguration": {
+                      "level": "error"
+                    },
+                    "properties": {
+                      "tags": [
+                        "ai-security",
+                        "security",
+                        "mcp",
+                        "external/owasp-llm/llm06",
+                        "filesystem-access",
+                        "OWASP-LLM-LLM06"
+                      ],
+                      "security-severity": "7.5"
+                    }
+                  }
+                ]
+              }
+            },
+            "results": [
+              {
+                "ruleId": "mcp-audit/filesystem-access",
+                "level": "error",
+                "message": {
+                  "text": "filesystem-access: This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration. in MCP 'filesystem-lab'"
+                },
+                "locations": [
+                  {
+                    "physicalLocation": {
+                      "artifactLocation": {
+                        "uri": "F:\\project0\\MCP-Project\\config\\e6\\open\\mcp.json",
+                        "uriBaseId": "%SRCROOT%"
+                      }
+                    },
+                    "logicalLocations": [
+                      {
+                        "name": "filesystem-lab",
+                        "kind": "mcp",
+                        "fullyQualifiedName": "Project (open)/filesystem-lab"
+                      }
+                    ]
+                  }
+                ],
+                "fixes": [
+                  {
+                    "description": {
+                      "text": "Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths."
+                    }
+                  }
+                ]
+              }
+            ],
+            "invocations": [
+              {
+                "executionSuccessful": true,
+                "endTimeUtc": "2026-11-23T11:21:11.160725Z"
+              }
+            ]
+          }
+        ]
+      },
+      "cyclonedx_aibom": {
+        "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.6",
+        "serialNumber": "urn:uuid:f9aeb932-4160-4c57-818d-ddd4493d78c7",
+        "version": 1,
+        "metadata": {
+          "timestamp": "2026-11-23T11:21:11.163098Z",
+          "tools": {
+            "components": [
+              {
+                "type": "application",
+                "name": "mcp-audit",
+                "publisher": "APIsec",
+                "version": "1.0.0",
+                "description": "MCP configuration security audit tool",
+                "externalReferences": [
+                  {
+                    "type": "website",
+                    "url": "https://github.com/apisec-inc/mcp-audit"
+                  }
+                ]
+              }
+            ]
+          },
+          "component": {
+            "type": "application",
+            "name": "mcp-environment",
+            "description": "MCP-enabled AI development environment"
+          }
+        },
+        "components": [
+          {
+            "type": "application",
+            "bom-ref": "mcp:filesystem-lab",
+            "name": "filesystem-lab",
+            "supplier": {
+              "name": "Anthropic"
+            },
+            "description": "Model Context Protocol server (python)",
+            "properties": [
+              {
+                "name": "source",
+                "value": "F:/project0/MCP-Project/proxy/logging_proxy.py"
+              },
+              {
+                "name": "server_type",
+                "value": "python"
+              },
+              {
+                "name": "found_in",
+                "value": "Project (open)"
+              },
+              {
+                "name": "registry_known",
+                "value": "true"
+              },
+              {
+                "name": "registry_risk",
+                "value": "high"
+              },
+              {
+                "name": "verified",
+                "value": "true"
+              },
+              {
+                "name": "risk_flags",
+                "value": "filesystem-access"
+              },
+              {
+                "name": "capabilities",
+                "value": "file-read,file-write,directory-list"
+              }
+            ]
+          },
+          {
+            "type": "application",
+            "bom-ref": "mcp:memory-lab",
+            "name": "memory-lab",
+            "supplier": {
+              "name": "Model Context Protocol"
+            },
+            "description": "Model Context Protocol server (python)",
+            "properties": [
+              {
+                "name": "source",
+                "value": "F:/project0/MCP-Project/proxy/logging_proxy.py"
+              },
+              {
+                "name": "server_type",
+                "value": "python"
+              },
+              {
+                "name": "found_in",
+                "value": "Project (open)"
+              },
+              {
+                "name": "registry_known",
+                "value": "true"
+              },
+              {
+                "name": "registry_risk",
+                "value": "low"
+              },
+              {
+                "name": "verified",
+                "value": "true"
+              },
+              {
+                "name": "capabilities",
+                "value": "knowledge-store,knowledge-retrieve"
+              }
+            ]
+          }
+        ],
+        "dependencies": []
+      },
+      "policy": {
+        "enterprise": {
+          "check_time": "2026-11-23T04:21:11.456223",
+          "policy_file": "F:\\project0\\mcp-audit\\policies\\enterprise.yaml",
+          "total_mcps": 2,
+          "violations": 2,
+          "warnings": 0,
+          "compliant": 0,
+          "results": [
+            {
+              "name": "filesystem-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Requires review: filesystem-access",
+                "Source not from verified publisher"
+              ]
+            },
+            {
+              "name": "memory-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Source not from verified publisher"
+              ]
+            }
+          ],
+          "_exit_code": 1
+        },
+        "permissive": {
+          "check_time": "2026-11-23T04:21:11.771978",
+          "policy_file": "F:\\project0\\mcp-audit\\policies\\permissive.yaml",
+          "total_mcps": 2,
+          "violations": 0,
+          "warnings": 0,
+          "compliant": 2,
+          "results": [
+            {
+              "name": "filesystem-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "COMPLIANT",
+              "reasons": [
+                "Passes all policy checks"
+              ]
+            },
+            {
+              "name": "memory-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "COMPLIANT",
+              "reasons": [
+                "Passes all policy checks"
+              ]
+            }
+          ],
+          "_exit_code": 0
+        },
+        "strict": {
+          "check_time": "2026-11-23T04:21:12.098624",
+          "policy_file": "F:\\project0\\mcp-audit\\policies\\strict.yaml",
+          "total_mcps": 2,
+          "violations": 2,
+          "warnings": 0,
+          "compliant": 0,
+          "results": [
+            {
+              "name": "filesystem-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Has denied capability: filesystem-write",
+                "Source not from verified publisher"
+              ]
+            },
+            {
+              "name": "memory-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Source not from verified publisher"
+              ]
+            }
+          ],
+          "_exit_code": 1
+        }
+      }
+    },
+    "argscope": {
+      "scanned_file": "config/e6/argscope/mcp.json",
+      "memory_server_flags": [
+        "--enforce-boundary"
+      ],
+      "scan": {
+        "scan_time": "2026-11-23T04:21:12.139668",
+        "total_mcps": 2,
+        "mcps": [
+          {
+            "name": "filesystem-lab",
+            "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+            "found_in": "Project (argscope)",
+            "server_type": "python",
+            "config_path": "F:\\project0\\MCP-Project\\config\\e6\\argscope\\mcp.json",
+            "command": "python",
+            "args": [
+              "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "--log-dir",
+              "F:/project0/MCP-Project/logs/raw",
+              "--server-id",
+              "filesystem",
+              "--label",
+              "opencode",
+              "--",
+              "python",
+              "F:/project0/MCP-Project/servers/fs_server.py",
+              "--root",
+              "F:/project0/MCP-Project/lab"
+            ],
+            "env": {},
+            "risk_flags": [
+              "filesystem-access"
+            ],
+            "registry": {
+              "is_known": true,
+              "provider": "Anthropic",
+              "type": "official",
+              "risk_level": "high",
+              "verified": true,
+              "capabilities": [
+                "file-read",
+                "file-write",
+                "directory-list"
+              ]
+            }
+          },
+          {
+            "name": "memory-lab",
+            "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+            "found_in": "Project (argscope)",
+            "server_type": "python",
+            "config_path": "F:\\project0\\MCP-Project\\config\\e6\\argscope\\mcp.json",
+            "command": "python",
+            "args": [
+              "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "--log-dir",
+              "F:/project0/MCP-Project/logs/raw",
+              "--server-id",
+              "memory",
+              "--label",
+              "opencode",
+              "--",
+              "python",
+              "F:/project0/MCP-Project/servers/memory_server.py",
+              "--enforce-boundary"
+            ],
+            "env": {},
+            "risk_flags": [],
+            "registry": {
+              "is_known": true,
+              "provider": "Model Context Protocol",
+              "type": "official",
+              "risk_level": "low",
+              "verified": true,
+              "capabilities": [
+                "knowledge-store",
+                "knowledge-retrieve"
+              ]
+            }
+          }
+        ],
+        "findings": [
+          {
+            "flag": "filesystem-access",
+            "severity": "high",
+            "affected_mcps": [
+              "filesystem-lab"
+            ],
+            "explanation": "This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration.",
+            "remediation": "Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths.",
+            "owasp_llm": [
+              {
+                "id": "LLM06",
+                "name": "Excessive Agency"
+              }
+            ]
+          }
+        ],
+        "owasp_llm_coverage": {
+          "reference": "https://genai.owasp.org/llm-top-10/",
+          "items": [
+            {
+              "id": "LLM01",
+              "name": "Prompt Injection",
+              "covered": true,
+              "evidence": "2 MCP(s) discovered - attack surface mapped"
+            },
+            {
+              "id": "LLM06",
+              "name": "Excessive Agency",
+              "covered": true,
+              "evidence": "Agency risks: filesystem-access"
+            }
+          ]
+        }
+      },
+      "scan_markdown": "# MCP Audit Report\n\n**Scan Time:** 2026-11-23 04:21:12\n**Total MCPs Found:** 2\n\n## MCP Inventory\n\n| MCP Name | Source | Found In | Type | Risk Flags |\n|----------|--------|----------|------|------------|\n| filesystem-lab | F:/project0/MCP-Project/proxy/logging_proxy.py | Project (argscope) | python | filesystem-access |\n| memory-lab | F:/project0/MCP-Project/proxy/logging_proxy.py | Project (argscope) | python | - |\n\n## Findings & Remediation\n\n### [HIGH] filesystem-access\n\n**Affected MCPs:** filesystem-lab\n\n**Why:** This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration.\n\n**OWASP LLM:** LLM06 (Excessive Agency)\n\n**Fix:** Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths.\n",
+      "scan_csv": "name,source,found_in,server_type,risk_flags,secrets_count,secrets_severity,apis_count,api_categories,config_path\nfilesystem-lab,F:/project0/MCP-Project/proxy/logging_proxy.py,Project (argscope),python,filesystem-access,0,,0,,F:\\project0\\MCP-Project\\config\\e6\\argscope\\mcp.json\nmemory-lab,F:/project0/MCP-Project/proxy/logging_proxy.py,Project (argscope),python,,0,,0,,F:\\project0\\MCP-Project\\config\\e6\\argscope\\mcp.json",
+      "sarif": {
+        "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+        "version": "2.1.0",
+        "runs": [
+          {
+            "tool": {
+              "driver": {
+                "name": "mcp-audit",
+                "informationUri": "https://github.com/apisec-inc/mcp-audit",
+                "version": "1.0.0",
+                "organization": "APIsec",
+                "shortDescription": {
+                  "text": "Security audit for Model Context Protocol (MCP) configurations"
+                },
+                "fullDescription": {
+                  "text": "MCP Audit scans AI development tools (Claude Desktop, Cursor, VS Code) for security risks including exposed secrets, API endpoints, and excessive agency."
+                },
+                "rules": [
+                  {
+                    "id": "mcp-audit/filesystem-access",
+                    "name": "Filesystem Access",
+                    "shortDescription": {
+                      "text": "filesystem-access"
+                    },
+                    "fullDescription": {
+                      "text": "This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration."
+                    },
+                    "help": {
+                      "text": "Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths.",
+                      "markdown": "**Remediation:** Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths."
+                    },
+                    "defaultConfiguration": {
+                      "level": "error"
+                    },
+                    "properties": {
+                      "tags": [
+                        "ai-security",
+                        "security",
+                        "mcp",
+                        "external/owasp-llm/llm06",
+                        "filesystem-access",
+                        "OWASP-LLM-LLM06"
+                      ],
+                      "security-severity": "7.5"
+                    }
+                  }
+                ]
+              }
+            },
+            "results": [
+              {
+                "ruleId": "mcp-audit/filesystem-access",
+                "level": "error",
+                "message": {
+                  "text": "filesystem-access: This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration. in MCP 'filesystem-lab'"
+                },
+                "locations": [
+                  {
+                    "physicalLocation": {
+                      "artifactLocation": {
+                        "uri": "F:\\project0\\MCP-Project\\config\\e6\\argscope\\mcp.json",
+                        "uriBaseId": "%SRCROOT%"
+                      }
+                    },
+                    "logicalLocations": [
+                      {
+                        "name": "filesystem-lab",
+                        "kind": "mcp",
+                        "fullyQualifiedName": "Project (argscope)/filesystem-lab"
+                      }
+                    ]
+                  }
+                ],
+                "fixes": [
+                  {
+                    "description": {
+                      "text": "Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths."
+                    }
+                  }
+                ]
+              }
+            ],
+            "invocations": [
+              {
+                "executionSuccessful": true,
+                "endTimeUtc": "2026-11-23T11:21:12.139766Z"
+              }
+            ]
+          }
+        ]
+      },
+      "cyclonedx_aibom": {
+        "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.6",
+        "serialNumber": "urn:uuid:dc9d4ee8-d760-44c6-b3ef-ec89998a6cd4",
+        "version": 1,
+        "metadata": {
+          "timestamp": "2026-11-23T11:21:12.139816Z",
+          "tools": {
+            "components": [
+              {
+                "type": "application",
+                "name": "mcp-audit",
+                "publisher": "APIsec",
+                "version": "1.0.0",
+                "description": "MCP configuration security audit tool",
+                "externalReferences": [
+                  {
+                    "type": "website",
+                    "url": "https://github.com/apisec-inc/mcp-audit"
+                  }
+                ]
+              }
+            ]
+          },
+          "component": {
+            "type": "application",
+            "name": "mcp-environment",
+            "description": "MCP-enabled AI development environment"
+          }
+        },
+        "components": [
+          {
+            "type": "application",
+            "bom-ref": "mcp:filesystem-lab",
+            "name": "filesystem-lab",
+            "supplier": {
+              "name": "Anthropic"
+            },
+            "description": "Model Context Protocol server (python)",
+            "properties": [
+              {
+                "name": "source",
+                "value": "F:/project0/MCP-Project/proxy/logging_proxy.py"
+              },
+              {
+                "name": "server_type",
+                "value": "python"
+              },
+              {
+                "name": "found_in",
+                "value": "Project (argscope)"
+              },
+              {
+                "name": "registry_known",
+                "value": "true"
+              },
+              {
+                "name": "registry_risk",
+                "value": "high"
+              },
+              {
+                "name": "verified",
+                "value": "true"
+              },
+              {
+                "name": "risk_flags",
+                "value": "filesystem-access"
+              },
+              {
+                "name": "capabilities",
+                "value": "file-read,file-write,directory-list"
+              }
+            ]
+          },
+          {
+            "type": "application",
+            "bom-ref": "mcp:memory-lab",
+            "name": "memory-lab",
+            "supplier": {
+              "name": "Model Context Protocol"
+            },
+            "description": "Model Context Protocol server (python)",
+            "properties": [
+              {
+                "name": "source",
+                "value": "F:/project0/MCP-Project/proxy/logging_proxy.py"
+              },
+              {
+                "name": "server_type",
+                "value": "python"
+              },
+              {
+                "name": "found_in",
+                "value": "Project (argscope)"
+              },
+              {
+                "name": "registry_known",
+                "value": "true"
+              },
+              {
+                "name": "registry_risk",
+                "value": "low"
+              },
+              {
+                "name": "verified",
+                "value": "true"
+              },
+              {
+                "name": "capabilities",
+                "value": "knowledge-store,knowledge-retrieve"
+              }
+            ]
+          }
+        ],
+        "dependencies": []
+      },
+      "policy": {
+        "enterprise": {
+          "check_time": "2026-11-23T04:21:12.418115",
+          "policy_file": "F:\\project0\\mcp-audit\\policies\\enterprise.yaml",
+          "total_mcps": 2,
+          "violations": 2,
+          "warnings": 0,
+          "compliant": 0,
+          "results": [
+            {
+              "name": "filesystem-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Requires review: filesystem-access",
+                "Source not from verified publisher"
+              ]
+            },
+            {
+              "name": "memory-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Source not from verified publisher"
+              ]
+            }
+          ],
+          "_exit_code": 1
+        },
+        "permissive": {
+          "check_time": "2026-11-23T04:21:12.724366",
+          "policy_file": "F:\\project0\\mcp-audit\\policies\\permissive.yaml",
+          "total_mcps": 2,
+          "violations": 0,
+          "warnings": 0,
+          "compliant": 2,
+          "results": [
+            {
+              "name": "filesystem-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "COMPLIANT",
+              "reasons": [
+                "Passes all policy checks"
+              ]
+            },
+            {
+              "name": "memory-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "COMPLIANT",
+              "reasons": [
+                "Passes all policy checks"
+              ]
+            }
+          ],
+          "_exit_code": 0
+        },
+        "strict": {
+          "check_time": "2026-11-23T04:21:13.028266",
+          "policy_file": "F:\\project0\\mcp-audit\\policies\\strict.yaml",
+          "total_mcps": 2,
+          "violations": 2,
+          "warnings": 0,
+          "compliant": 0,
+          "results": [
+            {
+              "name": "filesystem-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Has denied capability: filesystem-write",
+                "Source not from verified publisher"
+              ]
+            },
+            {
+              "name": "memory-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Source not from verified publisher"
+              ]
+            }
+          ],
+          "_exit_code": 1
+        }
+      }
+    },
+    "session": {
+      "scanned_file": "config/e6/session/mcp.json",
+      "memory_server_flags": [
+        "--session-workspace",
+        "A"
+      ],
+      "scan": {
+        "scan_time": "2026-11-23T04:21:13.068391",
+        "total_mcps": 2,
+        "mcps": [
+          {
+            "name": "filesystem-lab",
+            "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+            "found_in": "Project (session)",
+            "server_type": "python",
+            "config_path": "F:\\project0\\MCP-Project\\config\\e6\\session\\mcp.json",
+            "command": "python",
+            "args": [
+              "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "--log-dir",
+              "F:/project0/MCP-Project/logs/raw",
+              "--server-id",
+              "filesystem",
+              "--label",
+              "opencode",
+              "--",
+              "python",
+              "F:/project0/MCP-Project/servers/fs_server.py",
+              "--root",
+              "F:/project0/MCP-Project/lab"
+            ],
+            "env": {},
+            "risk_flags": [
+              "filesystem-access"
+            ],
+            "registry": {
+              "is_known": true,
+              "provider": "Anthropic",
+              "type": "official",
+              "risk_level": "high",
+              "verified": true,
+              "capabilities": [
+                "file-read",
+                "file-write",
+                "directory-list"
+              ]
+            }
+          },
+          {
+            "name": "memory-lab",
+            "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+            "found_in": "Project (session)",
+            "server_type": "python",
+            "config_path": "F:\\project0\\MCP-Project\\config\\e6\\session\\mcp.json",
+            "command": "python",
+            "args": [
+              "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "--log-dir",
+              "F:/project0/MCP-Project/logs/raw",
+              "--server-id",
+              "memory",
+              "--label",
+              "opencode",
+              "--",
+              "python",
+              "F:/project0/MCP-Project/servers/memory_server.py",
+              "--session-workspace",
+              "A"
+            ],
+            "env": {},
+            "risk_flags": [],
+            "registry": {
+              "is_known": true,
+              "provider": "Model Context Protocol",
+              "type": "official",
+              "risk_level": "low",
+              "verified": true,
+              "capabilities": [
+                "knowledge-store",
+                "knowledge-retrieve"
+              ]
+            }
+          }
+        ],
+        "findings": [
+          {
+            "flag": "filesystem-access",
+            "severity": "high",
+            "affected_mcps": [
+              "filesystem-lab"
+            ],
+            "explanation": "This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration.",
+            "remediation": "Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths.",
+            "owasp_llm": [
+              {
+                "id": "LLM06",
+                "name": "Excessive Agency"
+              }
+            ]
+          }
+        ],
+        "owasp_llm_coverage": {
+          "reference": "https://genai.owasp.org/llm-top-10/",
+          "items": [
+            {
+              "id": "LLM01",
+              "name": "Prompt Injection",
+              "covered": true,
+              "evidence": "2 MCP(s) discovered - attack surface mapped"
+            },
+            {
+              "id": "LLM06",
+              "name": "Excessive Agency",
+              "covered": true,
+              "evidence": "Agency risks: filesystem-access"
+            }
+          ]
+        }
+      },
+      "scan_markdown": "# MCP Audit Report\n\n**Scan Time:** 2026-11-23 04:21:13\n**Total MCPs Found:** 2\n\n## MCP Inventory\n\n| MCP Name | Source | Found In | Type | Risk Flags |\n|----------|--------|----------|------|------------|\n| filesystem-lab | F:/project0/MCP-Project/proxy/logging_proxy.py | Project (session) | python | filesystem-access |\n| memory-lab | F:/project0/MCP-Project/proxy/logging_proxy.py | Project (session) | python | - |\n\n## Findings & Remediation\n\n### [HIGH] filesystem-access\n\n**Affected MCPs:** filesystem-lab\n\n**Why:** This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration.\n\n**OWASP LLM:** LLM06 (Excessive Agency)\n\n**Fix:** Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths.\n",
+      "scan_csv": "name,source,found_in,server_type,risk_flags,secrets_count,secrets_severity,apis_count,api_categories,config_path\nfilesystem-lab,F:/project0/MCP-Project/proxy/logging_proxy.py,Project (session),python,filesystem-access,0,,0,,F:\\project0\\MCP-Project\\config\\e6\\session\\mcp.json\nmemory-lab,F:/project0/MCP-Project/proxy/logging_proxy.py,Project (session),python,,0,,0,,F:\\project0\\MCP-Project\\config\\e6\\session\\mcp.json",
+      "sarif": {
+        "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+        "version": "2.1.0",
+        "runs": [
+          {
+            "tool": {
+              "driver": {
+                "name": "mcp-audit",
+                "informationUri": "https://github.com/apisec-inc/mcp-audit",
+                "version": "1.0.0",
+                "organization": "APIsec",
+                "shortDescription": {
+                  "text": "Security audit for Model Context Protocol (MCP) configurations"
+                },
+                "fullDescription": {
+                  "text": "MCP Audit scans AI development tools (Claude Desktop, Cursor, VS Code) for security risks including exposed secrets, API endpoints, and excessive agency."
+                },
+                "rules": [
+                  {
+                    "id": "mcp-audit/filesystem-access",
+                    "name": "Filesystem Access",
+                    "shortDescription": {
+                      "text": "filesystem-access"
+                    },
+                    "fullDescription": {
+                      "text": "This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration."
+                    },
+                    "help": {
+                      "text": "Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths.",
+                      "markdown": "**Remediation:** Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths."
+                    },
+                    "defaultConfiguration": {
+                      "level": "error"
+                    },
+                    "properties": {
+                      "tags": [
+                        "ai-security",
+                        "security",
+                        "mcp",
+                        "external/owasp-llm/llm06",
+                        "filesystem-access",
+                        "OWASP-LLM-LLM06"
+                      ],
+                      "security-severity": "7.5"
+                    }
+                  }
+                ]
+              }
+            },
+            "results": [
+              {
+                "ruleId": "mcp-audit/filesystem-access",
+                "level": "error",
+                "message": {
+                  "text": "filesystem-access: This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration. in MCP 'filesystem-lab'"
+                },
+                "locations": [
+                  {
+                    "physicalLocation": {
+                      "artifactLocation": {
+                        "uri": "F:\\project0\\MCP-Project\\config\\e6\\session\\mcp.json",
+                        "uriBaseId": "%SRCROOT%"
+                      }
+                    },
+                    "logicalLocations": [
+                      {
+                        "name": "filesystem-lab",
+                        "kind": "mcp",
+                        "fullyQualifiedName": "Project (session)/filesystem-lab"
+                      }
+                    ]
+                  }
+                ],
+                "fixes": [
+                  {
+                    "description": {
+                      "text": "Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths."
+                    }
+                  }
+                ]
+              }
+            ],
+            "invocations": [
+              {
+                "executionSuccessful": true,
+                "endTimeUtc": "2026-11-23T11:21:13.068512Z"
+              }
+            ]
+          }
+        ]
+      },
+      "cyclonedx_aibom": {
+        "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.6",
+        "serialNumber": "urn:uuid:9cc62fb0-5b28-402c-9b17-238144683cde",
+        "version": 1,
+        "metadata": {
+          "timestamp": "2026-11-23T11:21:13.068565Z",
+          "tools": {
+            "components": [
+              {
+                "type": "application",
+                "name": "mcp-audit",
+                "publisher": "APIsec",
+                "version": "1.0.0",
+                "description": "MCP configuration security audit tool",
+                "externalReferences": [
+                  {
+                    "type": "website",
+                    "url": "https://github.com/apisec-inc/mcp-audit"
+                  }
+                ]
+              }
+            ]
+          },
+          "component": {
+            "type": "application",
+            "name": "mcp-environment",
+            "description": "MCP-enabled AI development environment"
+          }
+        },
+        "components": [
+          {
+            "type": "application",
+            "bom-ref": "mcp:filesystem-lab",
+            "name": "filesystem-lab",
+            "supplier": {
+              "name": "Anthropic"
+            },
+            "description": "Model Context Protocol server (python)",
+            "properties": [
+              {
+                "name": "source",
+                "value": "F:/project0/MCP-Project/proxy/logging_proxy.py"
+              },
+              {
+                "name": "server_type",
+                "value": "python"
+              },
+              {
+                "name": "found_in",
+                "value": "Project (session)"
+              },
+              {
+                "name": "registry_known",
+                "value": "true"
+              },
+              {
+                "name": "registry_risk",
+                "value": "high"
+              },
+              {
+                "name": "verified",
+                "value": "true"
+              },
+              {
+                "name": "risk_flags",
+                "value": "filesystem-access"
+              },
+              {
+                "name": "capabilities",
+                "value": "file-read,file-write,directory-list"
+              }
+            ]
+          },
+          {
+            "type": "application",
+            "bom-ref": "mcp:memory-lab",
+            "name": "memory-lab",
+            "supplier": {
+              "name": "Model Context Protocol"
+            },
+            "description": "Model Context Protocol server (python)",
+            "properties": [
+              {
+                "name": "source",
+                "value": "F:/project0/MCP-Project/proxy/logging_proxy.py"
+              },
+              {
+                "name": "server_type",
+                "value": "python"
+              },
+              {
+                "name": "found_in",
+                "value": "Project (session)"
+              },
+              {
+                "name": "registry_known",
+                "value": "true"
+              },
+              {
+                "name": "registry_risk",
+                "value": "low"
+              },
+              {
+                "name": "verified",
+                "value": "true"
+              },
+              {
+                "name": "capabilities",
+                "value": "knowledge-store,knowledge-retrieve"
+              }
+            ]
+          }
+        ],
+        "dependencies": []
+      },
+      "policy": {
+        "enterprise": {
+          "check_time": "2026-11-23T04:21:13.345675",
+          "policy_file": "F:\\project0\\mcp-audit\\policies\\enterprise.yaml",
+          "total_mcps": 2,
+          "violations": 2,
+          "warnings": 0,
+          "compliant": 0,
+          "results": [
+            {
+              "name": "filesystem-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Requires review: filesystem-access",
+                "Source not from verified publisher"
+              ]
+            },
+            {
+              "name": "memory-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Source not from verified publisher"
+              ]
+            }
+          ],
+          "_exit_code": 1
+        },
+        "permissive": {
+          "check_time": "2026-11-23T04:21:13.672204",
+          "policy_file": "F:\\project0\\mcp-audit\\policies\\permissive.yaml",
+          "total_mcps": 2,
+          "violations": 0,
+          "warnings": 0,
+          "compliant": 2,
+          "results": [
+            {
+              "name": "filesystem-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "COMPLIANT",
+              "reasons": [
+                "Passes all policy checks"
+              ]
+            },
+            {
+              "name": "memory-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "COMPLIANT",
+              "reasons": [
+                "Passes all policy checks"
+              ]
+            }
+          ],
+          "_exit_code": 0
+        },
+        "strict": {
+          "check_time": "2026-11-23T04:21:13.987464",
+          "policy_file": "F:\\project0\\mcp-audit\\policies\\strict.yaml",
+          "total_mcps": 2,
+          "violations": 2,
+          "warnings": 0,
+          "compliant": 0,
+          "results": [
+            {
+              "name": "filesystem-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Has denied capability: filesystem-write",
+                "Source not from verified publisher"
+              ]
+            },
+            {
+              "name": "memory-lab",
+              "source": "F:/project0/MCP-Project/proxy/logging_proxy.py",
+              "status": "VIOLATION",
+              "reasons": [
+                "Source not in allowed list",
+                "Source not from verified publisher"
+              ]
+            }
+          ],
+          "_exit_code": 1
+        }
+      }
+    }
+  },
+  "source_scan": {
+    "servers": {
+      "scan_root": "servers",
+      "finding_count": 0,
+      "findings": [],
+      "_exit_code": 0,
+      "files_recognised_as_mcp_server": [
+        "fs_server.py",
+        "git_server.py",
+        "memory_server.py",
+        "poisoned_server.py",
+        "sink_server.py"
+      ],
+      "checks_for": "shell-injection sinks fed by tool arguments (the only source-scan rule)"
+    },
+    "proxy": {
+      "scan_root": "proxy",
+      "finding_count": 0,
+      "findings": [],
+      "_exit_code": 0,
+      "files_recognised_as_mcp_server": [
+        "logging_proxy.py"
+      ],
+      "checks_for": "shell-injection sinks fed by tool arguments (the only source-scan rule)"
+    },
+    "common": {
+      "scan_root": "common",
+      "finding_count": 0,
+      "findings": [],
+      "_exit_code": 0,
+      "files_recognised_as_mcp_server": [],
+      "checks_for": "shell-injection sinks fed by tool arguments (the only source-scan rule)"
+    }
+  },
+  "registry_matches": {
+    "filesystem-lab": {
+      "matched_registry_entry": {
+        "id": "anthropic-filesystem",
+        "name": "Filesystem",
+        "provider": "Anthropic",
+        "package": "@anthropic/mcp-server-filesystem",
+        "type": "official",
+        "capabilities": [
+          "file-read",
+          "file-write",
+          "directory-list"
+        ],
+        "risk_level": "high",
+        "verified": true,
+        "documentation": "https://github.com/anthropics/mcp-servers"
+      },
+      "match_rule": "partial name match (fallback)",
+      "server_actually_is": "the testbed's own lab server (not this package)"
+    },
+    "memory-lab": {
+      "matched_registry_entry": {
+        "id": "modelcontextprotocol-memory",
+        "name": "Memory",
+        "provider": "Model Context Protocol",
+        "package": "@modelcontextprotocol/server-memory",
+        "type": "official",
+        "capabilities": [
+          "knowledge-store",
+          "knowledge-retrieve"
+        ],
+        "risk_level": "low",
+        "verified": true,
+        "documentation": "https://github.com/modelcontextprotocol/servers"
+      },
+      "match_rule": "partial name match (fallback)",
+      "server_actually_is": "the testbed's own lab server (not this package)"
+    }
+  },
+  "registry_size": 47,
+  "flag_explanations": {
+    "filesystem-access": {
+      "explanation": "This MCP can read and/or write files on the host system. Could leak sensitive files or modify system configuration.",
+      "remediation": "Restrict to specific directories. Use read-only mode if writes are not required. Never allow access to home directory or system paths.",
+      "severity": "high",
+      "detailed_steps": [
+        "Restrict filesystem access to specific directories only.",
+        "Use read-only mode if write access is not required.",
+        "Never allow access to home directory (~), system paths (/etc, /usr), or sensitive directories (.ssh, .aws).",
+        "Consider using a sandboxed directory for MCP file operations."
+      ],
+      "related": [
+        "filesystem-write",
+        "shell-access"
+      ]
+    }
+  },
+  "same_verdict_for_all_configs": true
+}
