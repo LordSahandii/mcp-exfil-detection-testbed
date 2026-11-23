@@ -1,0 +1,58 @@
+{
+  "//": "Real MCP servers from the benchmark shortlist, pinned to vulnerable versions, for STATIC mcp-audit scanning only. These servers are never run by this project.",
+  "mcpServers": {
+    "git-mcp": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-git",
+        "--repository",
+        "/repo"
+      ]
+    },
+    "filesystem-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem@2025.3.28",
+        "/data"
+      ]
+    },
+    "excel-mcp": {
+      "command": "uvx",
+      "args": [
+        "excel-mcp-server@0.1.8",
+        "stdio"
+      ]
+    },
+    "memory-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
+    },
+    "kubernetes-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-server-kubernetes@2.4.0"
+      ]
+    },
+    "whatsapp-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "whatsapp-mcp-server@0.2.0"
+      ]
+    },
+    "playwright-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.39",
+        "--port",
+        "8080"
+      ]
+    }
+  }
+}

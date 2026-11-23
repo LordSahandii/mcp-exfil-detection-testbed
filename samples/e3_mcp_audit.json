@@ -1,0 +1,219 @@
+{
+  "tool": {
+    "name": "mcp-audit",
+    "publisher": "APIsec",
+    "version": "1.1.0"
+  },
+  "what_it_is": "Static scanner: reads MCP config files and server source before deployment. It does not run servers or capture traffic. The CVE servers below were only scanned, not run.",
+  "lab_configs": {
+    "benign": {
+      "scanned_file": "config/e3/benign/mcp.json",
+      "servers": {
+        "filesystem-lab": {
+          "risk_flags": [
+            "filesystem-access"
+          ],
+          "registry_provider": "Anthropic",
+          "registry_risk": "high",
+          "registry_verified": true
+        },
+        "poisoned-lab": {
+          "risk_flags": [],
+          "registry_provider": null,
+          "registry_risk": null,
+          "registry_verified": false
+        },
+        "sink-lab": {
+          "risk_flags": [],
+          "registry_provider": null,
+          "registry_risk": null,
+          "registry_verified": false
+        }
+      },
+      "findings": [
+        {
+          "flag": "filesystem-access",
+          "severity": "high",
+          "affected": [
+            "filesystem-lab"
+          ]
+        }
+      ]
+    },
+    "startup": {
+      "scanned_file": "config/e3/startup/mcp.json",
+      "servers": {
+        "filesystem-lab": {
+          "risk_flags": [
+            "filesystem-access"
+          ],
+          "registry_provider": "Anthropic",
+          "registry_risk": "high",
+          "registry_verified": true
+        },
+        "poisoned-lab": {
+          "risk_flags": [],
+          "registry_provider": null,
+          "registry_risk": null,
+          "registry_verified": false
+        },
+        "sink-lab": {
+          "risk_flags": [],
+          "registry_provider": null,
+          "registry_risk": null,
+          "registry_verified": false
+        }
+      },
+      "findings": [
+        {
+          "flag": "filesystem-access",
+          "severity": "high",
+          "affected": [
+            "filesystem-lab"
+          ]
+        }
+      ]
+    },
+    "rugpull": {
+      "scanned_file": "config/e3/rugpull/mcp.json",
+      "servers": {
+        "filesystem-lab": {
+          "risk_flags": [
+            "filesystem-access"
+          ],
+          "registry_provider": "Anthropic",
+          "registry_risk": "high",
+          "registry_verified": true
+        },
+        "poisoned-lab": {
+          "risk_flags": [],
+          "registry_provider": null,
+          "registry_risk": null,
+          "registry_verified": false
+        },
+        "sink-lab": {
+          "risk_flags": [],
+          "registry_provider": null,
+          "registry_risk": null,
+          "registry_verified": false
+        }
+      },
+      "findings": [
+        {
+          "flag": "filesystem-access",
+          "severity": "high",
+          "affected": [
+            "filesystem-lab"
+          ]
+        }
+      ]
+    }
+  },
+  "cve_servers": {
+    "git-mcp": {
+      "aligns_with": [
+        "E1",
+        "E5",
+        "E6"
+      ],
+      "cve": null,
+      "note": "poisoned-repository scenario (no CVE)",
+      "command": "uvx mcp-server-git --repository /repo",
+      "risk_flags": [],
+      "registry_provider": "Unknown",
+      "registry_risk": "unknown",
+      "registry_match_name": null
+    },
+    "filesystem-mcp": {
+      "aligns_with": [
+        "E3",
+        "E6"
+      ],
+      "cve": "CVE-2025-53110",
+      "note": "directory-containment bypass; fixed in 2025.7.1",
+      "command": "npx -y @modelcontextprotocol/server-filesystem@2025.3.28 /data",
+      "risk_flags": [
+        "filesystem-access",
+        "unverified-source"
+      ],
+      "registry_provider": "Model Context Protocol",
+      "registry_risk": "high",
+      "registry_match_name": "Filesystem"
+    },
+    "excel-mcp": {
+      "aligns_with": [
+        "E3",
+        "E6"
+      ],
+      "cve": "CVE-2026-85661",
+      "note": "path traversal in stdio mode when EXCEL_FILES_PATH unset; vulnerable 0.1.8",
+      "command": "uvx excel-mcp-server@0.1.8 stdio",
+      "risk_flags": [],
+      "registry_provider": "Unknown",
+      "registry_risk": "unknown",
+      "registry_match_name": null
+    },
+    "memory-mcp": {
+      "aligns_with": [
+        "E1",
+        "E6"
+      ],
+      "cve": null,
+      "note": "poisoned-observations scenario (no CVE)",
+      "command": "npx -y @modelcontextprotocol/server-memory",
+      "risk_flags": [
+        "unverified-source"
+      ],
+      "registry_provider": "Model Context Protocol",
+      "registry_risk": "low",
+      "registry_match_name": "Memory"
+    },
+    "kubernetes-mcp": {
+      "aligns_with": [
+        "E5",
+        "E6"
+      ],
+      "cve": "CVE-2025-53355",
+      "note": "command injection via execSync; fixed in 2.5.0",
+      "command": "npx -y mcp-server-kubernetes@2.4.0",
+      "risk_flags": [
+        "unverified-source"
+      ],
+      "registry_provider": "Unknown",
+      "registry_risk": "unknown",
+      "registry_match_name": null
+    },
+    "whatsapp-mcp": {
+      "aligns_with": [
+        "E2",
+        "E3",
+        "E6"
+      ],
+      "cve": "CVE-2026-46555",
+      "note": "unauthenticated bridge, path traversal in media_path; fixed in 0.2.1 (package name illustrative)",
+      "command": "npx -y whatsapp-mcp-server@0.2.0",
+      "risk_flags": [
+        "unverified-source"
+      ],
+      "registry_provider": "Unknown",
+      "registry_risk": "unknown",
+      "registry_match_name": null
+    },
+    "playwright-mcp": {
+      "aligns_with": [
+        "E4",
+        "E5",
+        "E6"
+      ],
+      "cve": "CVE-2025-9611",
+      "note": "DNS rebinding, missing Origin check; fixed in 0.0.40",
+      "command": "npx -y @playwright/mcp@0.0.39 --port 8080",
+      "risk_flags": [
+        "unverified-source"
+      ],
+      "registry_provider": "Unknown",
+      "registry_risk": "unknown",
+      "registry_match_name": null
+    }
+  }
+}
