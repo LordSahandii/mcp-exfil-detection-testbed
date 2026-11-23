@@ -26,7 +26,7 @@
       },
       "models": {
         "qwen2.5:14b-24k": {
-          "name": "Qwen2.5 14B (24k ctx)",
+          "name": "qwen2.5:14b-24k",
           "tool_call": true,
           "limit": {
             "context": 24576,
