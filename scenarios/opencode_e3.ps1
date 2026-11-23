@@ -26,12 +26,14 @@
     powershell -ExecutionPolicy Bypass -File scenarios/opencode_e3.ps1
     powershell -ExecutionPolicy Bypass -File scenarios/opencode_e3.ps1 -Repeats 1 -Conditions benign,rugpull
 #>
-param([int]$Repeats = 3, [string]$Model = "qwen2.5:14b-24k",
+param([int]$Repeats = 3, [string]$Model = "qwen2.5:14b-24k", [int]$Ctx = 24576,
       [string[]]$Conditions = @("benign", "startup", "rugpull"))
 
 $ErrorActionPreference = "Continue"
 Set-Location (Split-Path $PSScriptRoot -Parent)
 $campaign = Get-Date -Format "MMdd-HHmm"
+$env:MCP_E3_MODEL = $Model
+$env:MCP_E3_CTX = "$Ctx"
 python scenarios/e3_configs.py | Out-Null
 
 $context = "Using the lab MCP tools, "

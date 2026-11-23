@@ -32,7 +32,10 @@ import os
 
 ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__), "..")).replace("\\", "/")
 OUT = os.path.join(ROOT, "config", "e3")
-MODEL = "qwen2.5:14b-24k"
+# The model is parameterised so the E3 campaign can be rerun against a different
+# Ollama model. opencode_e3.ps1 sets these before invoking this script.
+MODEL = os.environ.get("MCP_E3_MODEL", "qwen2.5:14b-24k")
+MODEL_CTX = int(os.environ.get("MCP_E3_CTX", "24576"))
 
 CONDITIONS = {
     "benign": "benign",
@@ -67,8 +70,8 @@ def opencode_config(condition: str, srv: dict) -> dict:
         "provider": {"ollama": {
             "npm": "@ai-sdk/openai-compatible", "name": "Ollama (local)",
             "options": {"baseURL": "http://localhost:11434/v1"},
-            "models": {MODEL: {"name": "Qwen2.5 14B (24k ctx)", "tool_call": True,
-                               "limit": {"context": 24576, "output": 8192}}}}},
+            "models": {MODEL: {"name": MODEL, "tool_call": True,
+                               "limit": {"context": MODEL_CTX, "output": 8192}}}}},
         "mcp": {"nmap": {"enabled": False},
                 **{name: {"type": "local", "enabled": True, "command": cmd} for name, cmd in srv.items()}},
     }
