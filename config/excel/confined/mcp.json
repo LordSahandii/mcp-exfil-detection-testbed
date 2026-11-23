@@ -1,0 +1,41 @@
+{
+  "mcpServers": {
+    "excel-lab": {
+      "command": "python",
+      "args": [
+        "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir",
+        "F:/project0/MCP-Project/logs/raw",
+        "--server-id",
+        "excel",
+        "--label",
+        "opencode",
+        "--",
+        "python",
+        "F:/project0/MCP-Project/servers/excel_server.py",
+        "--files-path",
+        "F:/project0/MCP-Project/lab/excel",
+        "--sandbox",
+        "F:/project0/MCP-Project/lab",
+        "--enforce-files-path"
+      ]
+    },
+    "sink-lab": {
+      "command": "python",
+      "args": [
+        "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir",
+        "F:/project0/MCP-Project/logs/raw",
+        "--server-id",
+        "sink",
+        "--label",
+        "opencode",
+        "--",
+        "python",
+        "F:/project0/MCP-Project/servers/sink_server.py",
+        "--receipts",
+        "F:/project0/MCP-Project/logs/features/sink_receipts.jsonl"
+      ]
+    }
+  }
+}
