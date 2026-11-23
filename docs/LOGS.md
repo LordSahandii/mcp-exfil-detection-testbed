@@ -26,11 +26,13 @@ logs/
     metrics.json              <- precision / recall / FPR
     channel_capacity.json     <- bytes-before-alert per sweep config
     report.md                 <- human-readable summary
+  export/opencode_sessions.json <- every live OpenCode session in one JSON file (§6)
 ```
 
 File names in `raw/` are `<server_id>.<label>.jsonl`, e.g. `git.attack.jsonl`,
-`filesystem.opencode.jsonl`. **label** = where the traffic came from
-(`benign`, `attack`, `sweep`, `opencode`).
+`filesystem.opencode-benign.jsonl`. **label** = where the traffic came from
+(`benign`, `attack`, `sweep` from the deterministic drivers; `opencode-benign`,
+`opencode-attack` from live OpenCode sessions; `opencode` for older ad-hoc runs).
 
 ---
 
@@ -91,8 +93,9 @@ The proxy sits on the MCP channel and **never sees your prompt** — the prompt
 goes from you to the LLM, a different channel. So prompts are captured two ways,
 both writing here and both joinable to the MCP calls by `run_id`:
 
-- **`opencode_batch.ps1`** (`source: "batch"`): logs each headless prompt and sets
-  a matching `MCP_RUN_ID`, so the proxy stamps the same `run_id` on every MCP call.
+- **`opencode_batch.ps1` / `opencode_attacks.ps1`** (`source: "batch"`): log each
+  headless prompt (with `scenario_id`, `variant`, `campaign`, `model`) and set a
+  matching `MCP_RUN_ID`, so the proxy stamps the same `run_id` on every MCP call.
 - **the OpenCode plugin** (`source: "plugin"`, `.opencode/plugins/prompt-logger.js`):
   captures user prompts live in the TUI too.
 
@@ -149,6 +152,21 @@ reasoning turns and assistant text); `prompts.jsonl` is the cleaned version.
 - **`channel_capacity.json`** — per sweep config, bytes-before-alert under three
   detector layers (L0 protocol-only, L1 +content markers, L2 +destination policy).
 - **`report.md`** — the human-readable roll-up of all of the above.
+
+## 6. `logs/export/opencode_sessions.json` — shareable OpenCode session log
+
+`python analysis/export_opencode.py` (after `analyze.py`) writes every live
+OpenCode session that has a batch prompt + policy record to one self-describing
+JSON file: `about`, `fields`, `outcome_definitions`, `summary`, and `sessions[]`
+(one record per session: label, scenario, prompt, policy, ordered tool calls with
+arguments and responses, the agent's answer, a verified `outcome`, and the
+detector verdict).
+
+The `outcome` is judged from what actually happened (secret in a tool response, in
+the sink payload, or in the agent's answer; call denied; mutation landed), so it can
+be compared against the detector. `context_window` is read from Ollama's
+`server.log`: `truncated` sessions ran with OpenCode's prompt cut to ~2k tokens
+(plain `qwen2.5:14b`); use `qwen2.5:14b-24k` for new runs.
 
 ---
 

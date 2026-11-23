@@ -1,7 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "//": "DEMO config for driving both benign and attack prompts live through OpenCode. Exposes the attack-relevant servers: filesystem (lab root), git (the INJECTED repo, for E1/E5), memory, local sink, and the poisoned rug-pull server (E3). The proxy label is set per run via MCP_LABEL (opencode-benign / opencode-attack) by opencode_demo.ps1.",
-  "model": "ollama/qwen2.5:14b",
+  "//": "DEMO config for driving both benign and attack prompts live through OpenCode. Exposes the attack-relevant servers: filesystem (lab root), git (the INJECTED repo, for E1/E5), memory, local sink, and the poisoned rug-pull server (E3). The proxy label is set per run via MCP_LABEL (opencode-benign / opencode-attack) by the opencode_*.ps1 drivers. Use qwen2.5:14b-24k: plain qwen2.5:14b runs at Ollama's default context and OpenCode's ~5-10k-token prompt gets truncated to ~2k (system prompt and tool schemas lost). nmap is disabled so a global nmap MCP server can't join lab sessions.",
+  "model": "ollama/qwen2.5:14b-24k",
+  "small_model": "ollama/qwen2.5:14b-24k",
   "tools": {
     "bash": false, "read": false, "write": false, "edit": false,
     "glob": false, "grep": false, "list": false, "patch": false,
@@ -12,10 +13,15 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "Ollama (local)",
       "options": { "baseURL": "http://localhost:11434/v1" },
-      "models": { "qwen2.5:7b": { "name": "Qwen2.5 7B" }, "qwen2.5:14b": { "name": "Qwen2.5 14B" } }
+      "models": {
+        "qwen2.5:7b": { "name": "Qwen2.5 7B" }, "qwen2.5:14b": { "name": "Qwen2.5 14B" },
+        "qwen2.5:14b-24k": { "name": "Qwen2.5 14B (24k ctx)", "tool_call": true,
+                             "limit": { "context": 24576, "output": 8192 } }
+      }
     }
   },
   "mcp": {
+    "nmap": { "enabled": false },
     "filesystem-lab": {
       "type": "local", "enabled": true,
       "command": ["python", "F:/project0/MCP-Project/proxy/logging_proxy.py",
