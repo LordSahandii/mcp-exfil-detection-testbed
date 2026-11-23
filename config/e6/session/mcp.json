@@ -1,0 +1,38 @@
+{
+  "mcpServers": {
+    "filesystem-lab": {
+      "command": "python",
+      "args": [
+        "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir",
+        "F:/project0/MCP-Project/logs/raw",
+        "--server-id",
+        "filesystem",
+        "--label",
+        "opencode",
+        "--",
+        "python",
+        "F:/project0/MCP-Project/servers/fs_server.py",
+        "--root",
+        "F:/project0/MCP-Project/lab"
+      ]
+    },
+    "memory-lab": {
+      "command": "python",
+      "args": [
+        "F:/project0/MCP-Project/proxy/logging_proxy.py",
+        "--log-dir",
+        "F:/project0/MCP-Project/logs/raw",
+        "--server-id",
+        "memory",
+        "--label",
+        "opencode",
+        "--",
+        "python",
+        "F:/project0/MCP-Project/servers/memory_server.py",
+        "--session-workspace",
+        "A"
+      ]
+    }
+  }
+}

@@ -26,7 +26,11 @@ SEED = [
 ]
 
 
-def build_server(enforce_boundary: bool = False) -> Server:
+def build_server(enforce_boundary: bool = False, session_workspace: str | None = None) -> Server:
+    """enforce_boundary filters by the `workspace` argument -- which the LLM picks,
+    so it only holds when the agent asks for the right scope. session_workspace
+    binds the server to the caller's workspace instead: every search and write is
+    confined to it, whatever the arguments say."""
     srv = Server("lab-memory", "1.0.0")
     store = list(SEED)
 
@@ -43,11 +47,16 @@ def build_server(enforce_boundary: bool = False) -> Server:
         ws = args.get("workspace")
         matches = []
         for item in store:
+            if session_workspace and item["workspace"] != session_workspace:
+                continue
             if ws and enforce_boundary and item["workspace"] != ws:
                 continue
             if q in item["observation"].lower() or q in item["entity"].lower():
                 matches.append(f"[{item['workspace']}] {item['entity']}: {item['observation']}")
-        header = (f"(boundary_enforced={enforce_boundary}, scope={ws or 'ALL'})")
+        if session_workspace:
+            header = f"(boundary=session, scope={session_workspace})"
+        else:
+            header = f"(boundary_enforced={enforce_boundary}, scope={ws or 'ALL'})"
         return header + "\n" + ("\n".join(matches) if matches else "(no matches)")
 
     @srv.tool(
@@ -59,6 +68,10 @@ def build_server(enforce_boundary: bool = False) -> Server:
          "required": ["workspace", "entity", "observation"]},
     )
     def add_observation(args):
+        if session_workspace and args["workspace"] != session_workspace:
+            return {"content": [{"type": "text", "text":
+                    f"DENIED: this session is bound to workspace {session_workspace}"}],
+                    "isError": True}
         store.append({"workspace": args["workspace"], "entity": args["entity"],
                       "observation": args["observation"]})
         return "stored"
@@ -70,9 +83,11 @@ def main():
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--enforce-boundary", action="store_true",
-                    help="Enforce workspace isolation (default off, to observe over-sharing)")
+                    help="Filter by the requested `workspace` argument (default off, to observe over-sharing)")
+    ap.add_argument("--session-workspace",
+                    help="Bind this server to one workspace (e.g. A): searches and writes never leave it")
     args = ap.parse_args()
-    build_server(args.enforce_boundary).run()
+    build_server(args.enforce_boundary, args.session_workspace).run()
 
 
 if __name__ == "__main__":
