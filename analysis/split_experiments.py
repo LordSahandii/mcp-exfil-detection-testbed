@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """
-split_experiments.py -- split the E3 and E6 runtime sessions into separate
-benign and malicious files, per experiment, for easier downstream processing.
+split_experiments.py -- split the E3, E6 and Excel-CVE runtime sessions into
+separate benign and malicious files, per experiment, for easier downstream
+processing.
 
 The mcp-audit static results are already separated by experiment
 (samples/e6_mcp_audit.json, samples/e3_mcp_audit.json); the benign/malicious
 distinction only applies to the live sessions, so this splits those.
 
-Reads   samples/e6_sessions.json, samples/e3_sessions.json
+Reads   samples/e6_sessions.json, samples/e3_sessions.json,
+        samples/excel_cve_sessions.json
 Writes  samples/split/<exp>_<label>.json  (self-describing: about + sessions)
         samples/split/<exp>_<label>.csv   (one row per session, flat, readable)
-        for exp in {e6, e3} and label in {benign, malicious}
+        for exp in {e6, e3, excel} and label in {benign, malicious}
 
 Run from the project root:  python analysis/split_experiments.py
 """
@@ -32,6 +34,8 @@ EXPERIMENTS = {
            "name": "E6 context exposure"},
     "e3": {"src": "e3_sessions.json", "measure": "e3", "outcome_field": "outcome",
            "name": "E3 tool poisoning / rug pull"},
+    "excel": {"src": "excel_cve_sessions.json", "measure": "xl", "outcome_field": "outcome",
+              "name": "Excel MCP CVE-2026-85661 path traversal"},
 }
 CSV_FIELDS = ["run_id", "experiment", "label", "scenario", "condition", "prompt_class", "variant",
               "model", "campaign", "outcome", "detector_alerted", "detector_rules", "n_tool_calls",
@@ -69,7 +73,10 @@ def main() -> int:
     total = 0
     for exp, cfg in EXPERIMENTS.items():
         doc = load(cfg["src"])
-        conditions = (doc.get("about") or {}).get("conditions")
+        src_about = doc.get("about") or {}
+        # Carry over the source legends that make the outcomes readable, when present.
+        legends = {k: src_about[k] for k in ("cve", "conditions", "prompt_classes", "outcomes")
+                   if src_about.get(k)}
         for label in ("benign", "malicious"):
             sessions = [s for s in doc["sessions"] if s["label"] == label]
             out = {
@@ -79,7 +86,7 @@ def main() -> int:
                     "generated_utc": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                     "source": f"samples/{cfg['src']}",
                     "sessions": len(sessions),
-                    "conditions": conditions,
+                    **legends,
                     "note": "Synthetic, local. One record per live OpenCode session: prompt, condition, "
                             "every tool call (arguments + response), the agent's answer, the experiment "
                             "outcome, and the detector verdict. Label is ground truth from the driver.",
@@ -96,7 +103,8 @@ def main() -> int:
                     w.writerow(csv_row(s, exp, cfg["measure"], cfg["outcome_field"]))
             total += len(sessions)
             print(f"  {exp}_{label:9} {len(sessions):3} sessions -> split/{exp}_{label}.json + .csv")
-    print(f"wrote {total} sessions across 4 benign/malicious files -> {OUTDIR}")
+    n_files = 2 * len(EXPERIMENTS)
+    print(f"wrote {total} sessions across {n_files} benign/malicious files -> {OUTDIR}")
     return 0
 
 

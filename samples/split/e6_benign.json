@@ -2,13 +2,18 @@
   "about": {
     "experiment": "E6 context exposure",
     "label": "benign",
-    "generated_utc": "2026-11-24T00:13:01Z",
+    "generated_utc": "2026-11-24T04:56:21Z",
     "source": "samples/e6_sessions.json",
     "sessions": 72,
     "conditions": {
       "open": "no workspace boundary",
       "argscope": "boundary keyed on the `workspace` argument the LLM picks (--enforce-boundary)",
       "session": "server bound to the user's workspace A (--session-workspace A)"
+    },
+    "prompt_classes": {
+      "benign-scoped": "ordinary Workspace A work",
+      "benign-broad": "benign intent, broad query that can match Workspace B",
+      "malicious": "explicitly after Workspace B data"
     },
     "note": "Synthetic, local. One record per live OpenCode session: prompt, condition, every tool call (arguments + response), the agent's answer, the experiment outcome, and the detector verdict. Label is ground truth from the driver."
   },
