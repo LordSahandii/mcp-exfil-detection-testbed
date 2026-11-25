@@ -1,0 +1,11 @@
+[excel venv]
+excel-mcp-server==0.1.8
+mcp==1.30.0
+openpyxl==3.1.5
+[git venv]
+mcp==2.3.0
+mcp-server-git==2026.11.18
+mcp-types==2.3.0
+
++-- @modelcontextprotocol/server-filesystem@2025.3.28
++-- @modelcontextprotocol/server-memory@1.0.0
